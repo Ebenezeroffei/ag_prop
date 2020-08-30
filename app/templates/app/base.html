@@ -1,0 +1,87 @@
+{% load static %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name = 'viewport' content="width=device-width,initial-scale=1.0"/>
+    <link rel="stylesheet" href="{% static 'app\bootstrap.min.css' %}">
+    <style>
+        /* Navbar */
+        nav{
+            background: white;
+/*            padding: 5px;*/
+            box-shadow: 0px 2px 5px rgba(0,0,0,.3);
+            position: fixed;
+            top: 0px;
+            width: 100%;
+        }
+        nav .container > ul{
+            list-style: none;
+            padding: 0px;
+            margin: 0px;
+            display: inline-block;
+            float: right;
+        }
+        nav .container > ul li{
+            display: inline-block;
+            width: 100px;
+            text-align: center;
+/*            background: red;*/
+            line-height: 70px;
+            position: relative;
+/*            overflow: auto;*/
+        }
+        nav .container > ul li a{
+            font-family: proxima-nova,Helvetica,Arial,sans-serif;
+            font-size: 15px;
+            font-weight: 400;
+            color: lightslategray;
+            transition: color .3s ease-in-out;
+        }
+        nav .container > ul li:hover a{
+            text-decoration: none;
+            color: #58a710;
+            
+        }
+        .special::after,.special::before{
+            content: '';
+            display: block;
+            width: 0%;
+            height: 2px;
+            background: lime;
+            line-height: 2px;
+            transition: all .3s ease-in-out;
+            position: relative;
+            left: 50%;
+        }
+        .special:hover::after,.special:hover::before{
+            left: 0px;
+            width: 100%;
+        }
+    </style>
+    {% block head %}
+    {% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    <nav>
+       <div class="container">
+            <a href="">
+                <img width="70px" src="{% static 'app/images/logo.jpg' %}" alt="Logo">
+            </a>
+            <ul>
+                <li class="special"><a href="">Home</a></li>
+                <li><a href="">Buy</a></li>
+                <li><a href="">Sell</a></li>
+                <li><a href="">Rent</a></li>
+                <li class="special"><a href="">Sign In</a></li>
+                <li class="special"><a href="">Join Us</a></li>
+            </ul>
+       </div>
+    </nav>
+    <script src="{% static 'app\jquery-3.5.1.min.js' %}" ></script>
+    <script src="{% static 'app\bootstrap.bundle.min.js' %}" ></script>
+</body>
+</html>
