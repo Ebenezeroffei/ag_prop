@@ -5,6 +5,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="Description" content="Agyapong Propoerties - The best real estate">
+    <meta name="Developer" content="Stark">
+    <meta name="Email" content="ebenezeroffei@outlook.com">
     <meta name = 'viewport' content="width=device-width,initial-scale=1.0"/>
     <link rel="stylesheet" href="{% static 'app\bootstrap.min.css' %}">
     <style>
@@ -12,19 +15,23 @@
         nav{
             background: white;
 /*            padding: 5px;*/
-            box-shadow: 0px 2px 5px rgba(0,0,0,.3);
             position: fixed;
             top: 0px;
             width: 100%;
+            border-bottom: thin solid rgba(0,0,0,.125);
         }
-        nav .container > ul{
+        nav .container-lg > ul{
             list-style: none;
             padding: 0px;
             margin: 0px;
             display: inline-block;
             float: right;
+            transition: all .2s ease-in-out;
+            visibility: visible;
+            opacity: 1;
+/*            display: none;*/
         }
-        nav .container > ul li{
+        nav .container-lg > ul > li{
             display: inline-block;
             width: 100px;
             text-align: center;
@@ -33,18 +40,37 @@
             position: relative;
 /*            overflow: auto;*/
         }
-        nav .container > ul li a{
+        nav .container-lg > ul > li a, nav .container-lg > ul > li span{
             font-family: proxima-nova,Helvetica,Arial,sans-serif;
             font-size: 15px;
             font-weight: 400;
             color: lightslategray;
             transition: color .3s ease-in-out;
+            display: block;
         }
-        nav .container > ul li:hover a{
+        /* Drop down arrow */
+        nav .container-lg > ul > li span::after, #phone-menu > ul li > span::after{
+            display: inline-block;
+            content: '';
+            border: solid lightslategray;
+            border-width: 0 1.5px 1.5px 0;
+            padding: 3px;
+            margin-left: 10px;
+            margin-bottom: 5px;
+            transform: rotate(45deg);
+            transition: all .2s ease-in-out;
+        }
+        nav .container-lg > ul > li:hover > a, nav .container-lg > ul > li:hover > span{
             text-decoration: none;
             color: #58a710;
             
         }
+        /* Dropdown hover */
+        nav .container-lg > ul > li:hover > span::after{
+            transform: rotate(225deg);
+            margin-bottom: 0px;
+        }
+        nav .container-lg > ul > li:hover > span
         .special::after,.special::before{
             content: '';
             display: block;
@@ -60,28 +86,319 @@
             left: 0px;
             width: 100%;
         }
+        /* Submenu */
+        .submenu{
+            position: absolute;
+            margin: 0px;
+            padding: 0px;
+            list-style: none;
+            background: white;
+            visibility: hidden;
+            opacity: 0;
+            width: 150%;
+            border-radius: 6px;
+            left: 25px;
+            top: 100px;
+            transition: top .3s ease-in-out;
+            box-shadow: 0px 5px 25px rgba(0,0,0,.125);
+        }
+        .submenu::before{
+            content: '';
+            width: 15px;
+            height: 15px;
+            background: white;
+            display: block;
+            position: absolute;
+            left: 15px;
+            top: -8px;
+            transform: rotate(45deg);
+            z-index: 0;
+        }
+        .submenu > li > a{
+/*            background: lime;*/
+            line-height: 30px;
+        }
+        .submenu > li > a:hover{
+            color: #58a710;
+            text-decoration: none;
+        }
+        nav .container-lg > ul > li:hover .submenu{
+            top: 70px;
+            visibility: visible;
+            opacity: 1;
+        }
+        
+        /* Phone Menu Nav */
+        #phone-menu   ul{
+            margin: auto;
+            padding: 0px;
+            list-style: none;
+            text-align: center;
+        }
+        #phone-menu ul li a, #phone-menu ul li span{
+            font-family: proxima-nova,Helvetica,Arial,sans-serif;
+            font-size: 15px;
+            font-weight: 400;
+            color: lightslategray;
+            transition: color .3s ease-in-out;
+            display: block; 
+            border-top: thin solid rgba(0,0,0,.125);
+            padding: 5px 0px;
+            cursor: pointer;
+/*            background: red;*/
+        }
+        #phone-menu ul li a:hover,#phone-menu ul li span:hover{
+            text-decoration: none;
+            color: #58a710;
+        }
+        
+        /* Hamburger Menu */
+        #hamburger{
+            position: absolute;
+            top: 20px;
+            z-index: 3;
+/*            background: lime;*/
+            transition: all .2s ease-in-out;
+            visibility: hidden;
+            opacity: 0;
+            height:25px;
+            right: 10px;
+            cursor: pointer;
+        }
+        #hamburger p{
+            width: 30px;
+            height: 4px;
+            background: #58a710;
+            position: relative;
+            top: 10px;
+            transition: all .2s ease-in-out;
+        }
+        #hamburger p::before, #hamburger p::after{
+            content: '';
+            width: 30px;
+            height: 4px;
+            display: block;
+            position: relative;
+            top: -10px;
+            background: #58a710;
+            transition: all .2s ease-in-out;
+        }
+        #hamburger p::after{
+            top: 6px;
+        }
+        #hamburger #active{
+            background: transparent;
+        }
+        #hamburger #active::before{
+            transform: rotate(45deg);
+            top: 2px;
+        }
+        #hamburger #active::after{
+            transform: rotate(135deg);
+            top: -2px;
+        }
+        /* Footer */
+        footer{
+            background-color: white;
+            border-top: thin solid rgba(0,0,0,.125);
+/*            display: none;*/
+        }
+        footer .row div p{
+            color: #58a710;
+/*            margin: auto;*/
+            font-size: 16px;
+            text-align: center;
+            font-weight: 700;
+        }
+        footer .row div ul{
+            margin: 0px;
+            padding: 0px;
+            list-style: none;
+            text-align: center;
+        }
+        footer .row div ul li a{
+            color: #888f99;
+            font-size: 14px;
+        }
+        footer .row div ul li a:hover{
+            text-decoration: none;
+            color: #58a710;
+            font-weight: 500;
+        }
+        /* Media QUary 0px - 750px */
+        @media only screen and (max-width:750px){
+            nav .container-lg > ul{
+                opacity: 0;
+                visibility: hidden;
+                display: none;
+            }
+            #hamburger{
+                opacity: 1;
+                visibility: visible;
+            }
+        }
     </style>
     {% block head %}
     {% endblock %}
 </head>
 <body>
+   <!-- Hamburger -->
+   <div id="hamburger"><p></p></div>
     <!-- Navbar -->
     <nav>
-       <div class="container">
+       <div class="container-lg">
             <a href="">
                 <img width="70px" src="{% static 'app/images/logo.jpg' %}" alt="Logo">
             </a>
             <ul>
                 <li class="special"><a href="">Home</a></li>
-                <li><a href="">Buy</a></li>
-                <li><a href="">Sell</a></li>
-                <li><a href="">Rent</a></li>
+                <li>
+                    <span>Buy</span>
+                    <ul class="submenu">
+                        <li><a href="">Hello</a></li>
+                        <li><a href="">World</a></li>
+                        <li><a href="">Ok</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span>Sell</span>
+                    <ul class="submenu">
+                        <li><a href="">Hello</a></li>
+                        <li><a href="">World</a></li>
+                        <li><a href="">Ok</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <span>Rent</span>
+                    <ul class="submenu">
+                        <li><a href="">Hello</a></li>
+                        <li><a href="">World</a></li>
+                        <li><a href="">Ok</a></li>
+                    </ul>
+                </li>
                 <li class="special"><a href="">Sign In</a></li>
                 <li class="special"><a href="">Join Us</a></li>
             </ul>
+            <!-- Phone Menu -->
+            <div id="phone-menu">
+                <ul>
+                    <li><a href="">Home</a></li>
+                    <li>
+                        <span>Buy</span>
+                        <ul>
+                            <li><a href="">Hello</a></li>
+                            <li><a href="">World</a></li>
+                            <li><a href="">Ok</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span>Rent</span>
+                        <ul>
+                            <li><a href="">Hello</a></li>
+                            <li><a href="">World</a></li>
+                            <li><a href="">Ok</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <span>Sell</span>
+                        <ul>
+                            <li><a href="">Hello</a></li>
+                            <li><a href="">World</a></li>
+                            <li><a href="">Ok</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
        </div>
     </nav>
+    <!-- Footer -->
+    <footer style="margin-top: 120px;padding: 10px;">
+        <div class="row no-gutters row-cols-md-5 row-cols-sm-3">
+            <div class="col text-center">
+                <img width="100" src="{% static 'app/images/logo.jpg' %}" alt="">
+            </div>
+            <div class="col">
+                <p>Welcome</p>
+                <ul>
+                    <li><a href="">Home</a></li>
+                    <li><a href="">Sign Up</a></li>
+                    <li><a href="">Join Us</a></li>
+                </ul>
+            </div>
+            <div class="col">
+                <p>Buy</p>
+                <ul>
+                    <li><a href="">Hello</a></li>
+                    <li><a href="">Hello</a></li>
+                    <li><a href="">Hello</a></li>
+                </ul>
+            </div>
+            <div class="col">
+                <p>Sell</p>
+                <ul>
+                    <li><a href="">Hello</a></li>
+                    <li><a href="">Hello</a></li>
+                    <li><a href="">Hello</a></li>
+                </ul>
+            </div>
+            <div class="col">
+                <p>Rent</p>
+                <ul>
+                    <li><a href="">Hello</a></li>
+                    <li><a href="">Hello</a></li>
+                    <li><a href="">Hello</a></li>
+                </ul>
+            </div>
+        </div>
+        <hr/>
+        <p class="text-muted small text-center">&copy; Copyright 2020</p>
+    </footer>
     <script src="{% static 'app\jquery-3.5.1.min.js' %}" ></script>
     <script src="{% static 'app\bootstrap.bundle.min.js' %}" ></script>
+    <script>
+        // A function that displays the side menu
+        let displaySideMenu = () => {
+            $('#hamburger').click(function(){
+                let hamburger = $(this).find('p');
+                if(hamburger.attr('id')){
+                    hamburger.removeAttr('id');
+                    $('#phone-menu').slideUp(200);
+                    $('#phone-menu ul li ul').slideUp(0);
+                }
+                else{
+                    hamburger.attr('id','active');
+                    $('#phone-menu').slideDown(200);
+                }
+            });
+        }
+        displaySideMenu();
+        
+        // A function that displays the sub menus in the phone menu
+        let displayPhoneMenuSubMenu = () => {
+            $('#phone-menu ul li span').click(function(){
+                $(this).parent().find('ul').slideToggle(200)
+            });
+        }
+        
+        displayPhoneMenuSubMenu()
+        // A function that makes some changes when the site is opened
+        let setUp = () => {
+            // Hide the phone menu
+            let phoneMenu = $('#phone-menu').slideUp(0);
+            // Hide all the submenu for the phone menu
+            $('#phone-menu ul li ul').slideUp(0);
+            window.onresize = () => {
+                if(window.innerWidth < 750){
+                    // Hide the phone menu
+                    phoneMenu.slideUp(100);
+                    // Hide all the submenu for the phone menu
+                    $('#phone-menu ul li ul').slideUp(100);
+                    // Close the hamburger menu
+                    $('#hamburger p').removeAttr('id');
+                }
+            }
+        }
+        setUp()
+    </script>
 </body>
 </html>
