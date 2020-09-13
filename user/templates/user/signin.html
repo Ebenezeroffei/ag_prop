@@ -1,0 +1,49 @@
+{% extends 'user/base.html' %}
+
+
+{% block head %}
+    <title>Sign In</title>
+{% endblock %}
+{% block content %}
+  <!-- Non Field Errors -->
+   {% for error in form.non_field_errors %}
+       <p class="small text-danger m-auto">{{error}}</p>
+   {% endfor %}
+   <!-- User's account has been created -->
+   {% if messages %}
+       {% for message in messages %}
+           <div class="alert alert-success alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+       {% endfor %}
+   {% endif %}
+    {% for field in form %}
+        <div class="form-group">
+           <!-- Label -->
+            {{field.label_tag}}
+            <!-- Error -->
+            {% for error in field.errors %}
+                <p class="text-danger small">{{ error }}</p>
+            {% endfor %}
+            <!-- Input Field -->
+            {{field}}
+        </div>
+    {% endfor %}
+    <p class="small m-auto text-right"><a href="{% url 'password_reset' %}" style="color:#58a710 ">Forgotten Password</a></p>
+    <input type="submit" value="Sign In" class="btn btn-block">
+    <p class = 'text-muted small text-center m-auto'>Not a member yet?</p>
+    <p class="text-center m-auto small"><a style="font-weight: 700;color: #58a710;" href="{% url 'user:signup' %}">Join now</a></p>
+{% endblock %}
+{% block javascript %}
+    <script>
+        // A function that runs when the pages loads
+        let init = () => {
+            $('#id_username, #id_password').attr('class','form-control');
+        }
+        init() // Invoke function
+        
+    </script>
+{% endblock %}

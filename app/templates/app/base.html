@@ -8,9 +8,19 @@
     <meta name="Description" content="Agyapong Propoerties - The best real estate">
     <meta name="Developer" content="Stark">
     <meta name="Email" content="ebenezeroffei@outlook.com">
+    <meta name="Mobile" content="+233 271 815 776">
     <meta name = 'viewport' content="width=device-width,initial-scale=1.0"/>
     <link rel="stylesheet" href="{% static 'app\bootstrap.min.css' %}">
     <style>
+        ::-webkit-scrollbar{
+            width: 10px;
+        }
+        ::-webkit-scrollbar-thumb{
+            background: #58a710;
+        }
+        ::-webkit-scrollbar-track{
+            background: #f1f1f1;
+        }
         /* Navbar */
         nav{
             background: white;
@@ -19,6 +29,8 @@
             top: 0px;
             width: 100%;
             border-bottom: thin solid rgba(0,0,0,.125);
+            z-index: 10;
+            padding-bottom: 10px;
         }
         nav .container-lg > ul{
             list-style: none;
@@ -30,6 +42,9 @@
             visibility: visible;
             opacity: 1;
 /*            display: none;*/
+        }
+        nav .container-lg > ul::after{
+            clear: both;
         }
         nav .container-lg > ul > li{
             display: inline-block;
@@ -129,6 +144,9 @@
         }
         
         /* Phone Menu Nav */
+        #phone-menu{
+            background: white;
+        }
         #phone-menu   ul{
             margin: auto;
             padding: 0px;
@@ -156,7 +174,7 @@
         #hamburger{
             position: absolute;
             top: 20px;
-            z-index: 3;
+            z-index: 11;
 /*            background: lime;*/
             transition: all .2s ease-in-out;
             visibility: hidden;
@@ -197,6 +215,41 @@
             transform: rotate(135deg);
             top: -2px;
         }
+        
+        
+        /* Searchbar */
+        #searchbar-wrapper{
+            display: grid;
+            grid-template-columns: 1fr 150px 100px;
+            grid-column-gap: 5px;
+        }
+        #searchbar-wrapper > input[type = 'text']{
+            width: 95%;
+            margin: auto;
+            border: thin solid rgba(0,0,0,.125);
+            border-radius: 5px;
+            color: #8e8e93;
+            padding: 6px 10px;
+        }
+        #searchbar-wrapper > input[type = 'text']:focus{
+            border-color: #58a710;
+            outline: none;
+        }
+        #searchbar-wrapper > button{
+            color: white;
+            border-radius: 5px;
+            background: #58a710;
+            border: thin solid #58a710;
+            margin-right: 5px;
+            box-shadow: 0px 2px 5px rgba(0,0,0,.3);
+            transition: all .1s ease-in-out;
+        }
+        #searchbar-wrapper > button:hover{
+            background: white;
+            color: #58a710;
+            box-shadow: 0px 2px 5px rgba(88, 167, 16,.3)
+        }
+        
         /* Footer */
         footer{
             background-color: white;
@@ -225,8 +278,8 @@
             color: #58a710;
             font-weight: 500;
         }
-        /* Media QUary 0px - 750px */
-        @media only screen and (max-width:750px){
+        /* Media QUary 0px - 850px */
+        @media only screen and (max-width:850px){
             nav .container-lg > ul{
                 opacity: 0;
                 visibility: hidden;
@@ -276,8 +329,20 @@
                         <li><a href="">Ok</a></li>
                     </ul>
                 </li>
-                <li class="special"><a href="">Sign In</a></li>
-                <li class="special"><a href="">Join Us</a></li>
+                <li class="special"><a href="">Contact Us</a></li>
+                {% if user.is_authenticated %}
+                    <li>
+                        <span>Hi {{user.username}}</span>
+                        <ul class="submenu">
+                            <li><a href="">Profile</a></li>
+                            <li><a href="">Wishlist</a></li>
+                            <li><a href="">Logout</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li class="special"><a href="{% url 'user:signin' %}">Sign In</a></li>
+                    <li class="special"><a href="{% url 'user:signup' %}">Join Us</a></li>
+                {% endif %}
             </ul>
             <!-- Phone Menu -->
             <div id="phone-menu">
@@ -307,42 +372,77 @@
                             <li><a href="">Ok</a></li>
                         </ul>
                     </li>
+                    <li><a href="">Contact Us</a></li>
+                    {% if user.is_authenticated %}
+                        <li>
+                            <span>Hi {{ user.username }}</span>
+                            <ul>
+                                <li><a href="">Profile</a></li>
+                                <li><a href="">Wishlist</a></li>
+                                <li><a href="">Logout</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li><a href="{% url 'user:signin' %}">Sign In</a></li>
+                        <li><a href="{% url 'user:signup' %}">Join Us</a></li>
+                    {% endif %}
                 </ul>
             </div>
        </div>
+       <div id="searchbar-container">
+           <div id="searchbar-wrapper">
+               <input type="text">
+               <select class = 'form-control' name="" id="">
+                  <option>All</oprion>
+                   <option value="">Region</option>
+                   <option value="">City</option>
+                   <option value="">Bedrooms</option>
+               </select>
+               <button>Search</button>
+           </div>
+       </div>
     </nav>
+    {% block content %}
+    {% endblock %}
     <!-- Footer -->
-    <footer style="margin-top: 120px;padding: 10px;">
+    <footer style="margin-top: 120px;padding-top: 10px">
         <div class="row no-gutters row-cols-md-5 row-cols-sm-3">
             <div class="col text-center">
                 <img width="100" src="{% static 'app/images/logo.jpg' %}" alt="">
             </div>
-            <div class="col">
-                <p>Welcome</p>
+            <div class="col mt-3 mt-md-0">
+                <p style = 'margin:auto' >Welcome</p>
                 <ul>
                     <li><a href="">Home</a></li>
-                    <li><a href="">Sign Up</a></li>
-                    <li><a href="">Join Us</a></li>
+                    <li><a href="">Contact Us</a></li>
+                    {% if user.is_authenticated %}
+                        <li><a href="">Profile</a></li>
+                        <li><a href="">Wishlist</a></li>
+                        <li><a href="">Logout</a></li>
+                    {% else %}
+                        <li><a href="{% url 'user:signin' %}">Sign Up</a></li>
+                        <li><a href="{% url 'user:signup' %}">Join Us</a></li>
+                    {% endif %}
                 </ul>
             </div>
-            <div class="col">
-                <p>Buy</p>
+            <div class="col mt-3 mt-md-0">
+                <p style = 'margin:auto' >Buy</p>
                 <ul>
                     <li><a href="">Hello</a></li>
                     <li><a href="">Hello</a></li>
                     <li><a href="">Hello</a></li>
                 </ul>
             </div>
-            <div class="col">
-                <p>Sell</p>
+            <div class="col mt-3 mt-md-0">
+                <p style = 'margin:auto' >Sell</p>
                 <ul>
                     <li><a href="">Hello</a></li>
                     <li><a href="">Hello</a></li>
                     <li><a href="">Hello</a></li>
                 </ul>
             </div>
-            <div class="col">
-                <p>Rent</p>
+            <div class="col mt-3 mt-md-0">
+                <p style = 'margin:auto' >Rent</p>
                 <ul>
                     <li><a href="">Hello</a></li>
                     <li><a href="">Hello</a></li>
@@ -351,7 +451,12 @@
             </div>
         </div>
         <hr/>
-        <p class="text-muted small text-center">&copy; Copyright 2020</p>
+        <p class="text-muted small text-center">Copyright &copy; {% now 'Y' %}</p>
+        <div class="row no-gutters" style = 'background:#58a710;font-size: 14px;color: white;text-align: center;padding: 10px; '>
+            <div class="col-md-4 mt-2 mt-md-0"><span style = 'color:deepskyblue;' >Designed By: </span>Stark Tech Solutions</div>
+            <div class="col-md-4 mt-2 mt-md-0"><span style = 'color:deepskyblue;' >Email: </span>ebenezeroffei@outlook.com</div>
+            <div class="col-md-4 mt-2 mt-md-0"><span style = 'color:deepskyblue;' >Mobile: </span>+233 271 815 776</div>
+        </div>
     </footer>
     <script src="{% static 'app\jquery-3.5.1.min.js' %}" ></script>
     <script src="{% static 'app\bootstrap.bundle.min.js' %}" ></script>
@@ -388,7 +493,7 @@
             // Hide all the submenu for the phone menu
             $('#phone-menu ul li ul').slideUp(0);
             window.onresize = () => {
-                if(window.innerWidth < 750){
+                if(window.innerWidth < 850){
                     // Hide the phone menu
                     phoneMenu.slideUp(100);
                     // Hide all the submenu for the phone menu
@@ -396,9 +501,17 @@
                     // Close the hamburger menu
                     $('#hamburger p').removeAttr('id');
                 }
+                else{
+                    // Hide the phone menu
+                    let phoneMenu = $('#phone-menu').slideUp(0);
+                    // Hide all the submenu for the phone menu
+                    $('#phone-menu ul li ul').slideUp(0);
+                }
             }
         }
         setUp()
     </script>
+    {% block javascript %}
+    {% endblock %}
 </body>
 </html>
