@@ -85,7 +85,6 @@
             transform: rotate(225deg);
             margin-bottom: 0px;
         }
-        nav .container-lg > ul > li:hover > span
         .special::after,.special::before{
             content: '';
             display: block;
@@ -96,6 +95,9 @@
             transition: all .3s ease-in-out;
             position: relative;
             left: 50%;
+        }
+        .special::after{
+            top: 0px;
         }
         .special:hover::after,.special:hover::before{
             left: 0px;
@@ -172,7 +174,7 @@
         
         /* Hamburger Menu */
         #hamburger{
-            position: absolute;
+            position: fixed;
             top: 20px;
             z-index: 11;
 /*            background: lime;*/
@@ -224,7 +226,7 @@
             grid-column-gap: 5px;
         }
         #searchbar-wrapper > input[type = 'text']{
-            width: 95%;
+            width: calc(100% - 10px);
             margin: auto;
             border: thin solid rgba(0,0,0,.125);
             border-radius: 5px;
@@ -254,6 +256,7 @@
         footer{
             background-color: white;
             border-top: thin solid rgba(0,0,0,.125);
+            margin-top: 20px;
 /*            display: none;*/
         }
         footer .row div p{
@@ -278,8 +281,8 @@
             color: #58a710;
             font-weight: 500;
         }
-        /* Media QUary 0px - 850px */
-        @media only screen and (max-width:850px){
+        /* Media QUary 0px - 950px */
+        @media only screen and (max-width:950px){
             nav .container-lg > ul{
                 opacity: 0;
                 visibility: hidden;
@@ -330,6 +333,7 @@
                     </ul>
                 </li>
                 <li class="special"><a href="">Contact Us</a></li>
+                <li class="special"><a href="{% url 'blog:home' %}">Blog</a></li>
                 {% if user.is_authenticated %}
                     <li>
                         <span>Hi {{user.username}}</span>
@@ -344,6 +348,7 @@
                     <li class="special"><a href="{% url 'user:signup' %}">Join Us</a></li>
                 {% endif %}
             </ul>
+            <div style="clear: both"></div>
             <!-- Phone Menu -->
             <div id="phone-menu">
                 <ul>
@@ -373,6 +378,7 @@
                         </ul>
                     </li>
                     <li><a href="">Contact Us</a></li>
+                    <li><a href="{% url 'blog:home' %}">Blog</a></li>
                     {% if user.is_authenticated %}
                         <li>
                             <span>Hi {{ user.username }}</span>
@@ -389,7 +395,7 @@
                 </ul>
             </div>
        </div>
-       <div id="searchbar-container">
+       <div id="searchbar-container" style = 'margin-top: 10px;'>
            <div id="searchbar-wrapper">
                <input type="text">
                <select class = 'form-control' name="" id="">
@@ -405,7 +411,7 @@
     {% block content %}
     {% endblock %}
     <!-- Footer -->
-    <footer style="margin-top: 120px;padding-top: 10px">
+    <footer style="padding-top: 10px">
         <div class="row no-gutters row-cols-md-5 row-cols-sm-3">
             <div class="col text-center">
                 <img width="100" src="{% static 'app/images/logo.jpg' %}" alt="">
@@ -415,6 +421,7 @@
                 <ul>
                     <li><a href="">Home</a></li>
                     <li><a href="">Contact Us</a></li>
+                    <li><a href="{% url 'blog:home' %}">Blog</a></li>
                     {% if user.is_authenticated %}
                         <li><a href="">Profile</a></li>
                         <li><a href="">Wishlist</a></li>
@@ -493,7 +500,7 @@
             // Hide all the submenu for the phone menu
             $('#phone-menu ul li ul').slideUp(0);
             window.onresize = () => {
-                if(window.innerWidth < 850){
+                if(window.innerWidth < 950){
                     // Hide the phone menu
                     phoneMenu.slideUp(100);
                     // Hide all the submenu for the phone menu

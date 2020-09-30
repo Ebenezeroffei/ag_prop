@@ -1,0 +1,83 @@
+{% extends 'app/admin_base.html' %}
+
+
+{% block head %}
+   {% if object %}
+        <title>Edit Blog</title>
+   {% else %}
+        <title>Create Blog</title>
+   {% endif %}
+    <style>
+        /* Submit Button */
+        input[type = 'submit']{
+            border-radius: 10px 0px;
+            transition: all .2s ease-in-out;
+            border: thin solid #58a710;
+            background: #58a710;
+            color: white;
+            margin-top: 10px;
+        }
+        input[type = 'submit']:hover{
+            color: #58a710;
+            background: white;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container" style="margin-top: 120px">
+        <form action="." method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- Title -->
+            <div class="form-group">
+                {{form.title.label_tag}}
+                {{form.title}}
+            </div>
+            <!-- Image -->
+            <div class="form-group">
+               <label for="">{{form.image.label}}:</label>
+               <p class="m-auto small text-muted" id="image-info">No File Chosen</p>
+                <div class="input-group mb-3">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text">Upload</span>
+                  </div>
+                  <div class="custom-file">
+                    <input accept="image/*" required type="file" class="custom-file-input" name="image" id="id_image" aria-describedby="id_image">
+                    <label class="custom-file-label" for="id_image">{% firstof object.image.url 'Choose File' %}</label>
+                  </div>
+                </div>
+            </div>
+            <!-- TextArea -->
+            <div class="form-group">
+                {{form.content.label_tag}}
+                {{form.content}}
+            </div>
+            <div style="max-width: 400px;margin: 10px auto;">
+               {% if object %}
+                    <input class="btn btn-block" type="submit" value = 'Save Changes'>
+               {% else %}
+                    <input class="btn btn-block" type="submit" value = 'Create'>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        // A function that makes all the necessary modifications when the page loads
+        let init = () => {
+            // Add Bootstrap styles to the input fields
+            $('#id_title, textarea').attr('class','form-control');
+        }
+        init()
+        
+        // A function that tells us if a user has chosen a file_exists
+        let imageChosen = () => {
+            $('#id_image').change(function(){
+                // An image has been chosen
+                $('#image-info').removeClass('text-muted').addClass('text-success').text("Image Chosen");
+                $('label[for = "id_image"]').text($(this).val())
+            });
+        }
+        imageChosen()
+    </script>
+{% endblock %}
