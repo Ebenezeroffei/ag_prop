@@ -1,0 +1,232 @@
+{% extends 'app/base.html' %}
+{% load static %}
+
+
+{% block head %}
+    <title>{{object.name}}</title>
+    <style>
+        #images{
+            display: grid;
+            grid-template-columns: repeat(5,1fr);
+            border-top: thin solid white;
+        }
+        #images img:first-child{
+            opacity: 1;
+        }
+        #images img{
+            opacity: 0.7;
+            border: thin solid white;
+            cursor: pointer;
+        }
+        /* Schedule Tour */
+        #schedule-tour{
+            color: white;
+            background: #58a710;
+            border: thin solid #58a710;
+            transition: all .2s ease-in-out;
+            border-radius: 10px 0px;
+        }
+        #schedule-tour:hover{
+            color: #58a710;
+            background: white;
+        }
+        /* Other Properties */
+        .prop > a:hover{
+            text-decoration: none;
+            transition: all .3s ease-in-out;
+        }
+        .prop{
+            position: relative;
+        }
+        .prop:hover{
+            box-shadow: rgb(209, 209, 213) 0px 5px 15px;
+        }
+        .category{
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            padding: 5px;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container-lg" style="margin-top: 150px;">
+        <div class="row">
+           <!-- Property Images -->
+            <div class="col-md-7" style="position: relative;">
+              <span style="position: absolute;font-size: 16px; top: 50px;left: 25px;padding: 5px;" class="badge badge-danger">{{ object.category }}</span>
+               <h4 style = 'color: #333333'>{{object.name}}</h4>
+                <img style="border-radius: 10px 10px 0px 0px" id="main-image" height="400px" width="100%" src="{{object.image1.url}}" alt="">
+                <div id="images">
+                    {% for img in object.active_images %}
+                        <img src="{{img.url}}" width="100%" alt="">
+                    {% endfor %}
+                </div>
+            </div>
+            <!-- Map -->
+            <div class="col-md-5 mt-3 mt-md-0">
+                <h4 style="color: #333333">Map</h4>
+            </div>
+            <div class="col-12">
+                <div class="card mt-3">
+                    <div class="row">
+                        <div class="col-sm-4 text-center border-right">
+                            <p style="font-size: 18px;font-weight: 500;" class="text-muted m-auto">Price</p>
+                            <p style="font-size: 25px;font-weight: 500; color:#58a710 ">GHC {{ object.price }}</p>
+                        </div>
+                        <div class="col-sm-4 text-center border-right">
+                            <p style="font-size: 18px;font-weight: 500;" class="text-muted m-auto">Location</p>
+                            <p style="font-size: 25px;font-weight: 500; color:#58a710 ">{{ object.location }}</p>
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <p style="font-size: 18px;font-weight: 500;" class="text-muted m-auto">Size</p>
+                            <p style="font-size: 25px;font-weight: 500; color:#58a710 ">{{ object.size }}Sq. Ft.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Interior Features -->
+            <div class="col-md-6 mt-5 mt-md-0">
+                <div class="card h-100 mt-3">
+                    <div class="card-header text-light text-center" style="background: #58a710">Interior Features</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="m-auto text-info">Bedroom{{object.interiorfeatures.bedroom|pluralize}}: <span class="text-dark">{{object.interiorfeatures.bedroom}}</span></p>
+                            </div>
+                            <div class="col-6">
+                                <p class="m-auto text-info">Bathroom{{object.interiorfeatures.bathroom|pluralize}}: <span class="text-dark">{{object.interiorfeatures.bathroom}}</span></p>
+                            </div>
+                            <div class="col-6">
+                                <p class="m-auto text-info">Kitchen{{object.interiorfeatures.kitchen|pluralize}}: <span class="text-dark">{{object.interiorfeatures.kitchen}}</span></p>
+                            </div>
+                            <div class="col-6">
+                                <p class="m-auto text-info">Reception{{object.interiorfeatures.reception|pluralize}}: <span class="text-dark">{{object.interiorfeatures.reception}}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Exterior Features -->
+            <div class="col-md-6 mt-5 mt-md-0">
+                <div class="card h-100 mt-3">
+                    <div class="card-header text-light text-center" style="background: #58a710">Exterior Features</div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-6">
+                                <p class="m-auto text-info">Garage{{object.exteriorfeatures.garage|pluralize}}: <span class="text-dark">{{object.exteriorfeatures.garage}}</span></p>
+                            </div>
+                            <div class="col-6">
+                                <p class="m-auto text-info">Parking{{object.exteriorfeatures.parking|pluralize}}: <span class="text-dark">{{object.exteriorfeatures.parking}}</span></p>
+                            </div>
+                            <div class="col-6">
+                                <p class="m-auto text-info">Security: <span class="text-dark">{{object.exteriorfeatures.security}}</span></p>
+                            </div>
+                            <div class="col-6">
+                                <p class="m-auto text-info">Pool: <span class="text-dark">{{object.exteriorfeatures.pool}}</span></p>
+                            </div>
+                            <div class="col-12">
+                                <p class="m-auto text-info">Domestic Accomodation{{object.exteriorfeatures.domestic_accomodation|pluralize}}: <span class="text-dark">{{object.exteriorfeatures.domestic_accomodation}}</span></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% if object.extras %}
+                <!-- Extras -->
+                <div class="col-md-6">
+                    <div class="card mt-5">
+                        <div class="card-header text-light text-center" style="background: #58a710">Extras</div>
+                        <div class="card-body">
+                            <ul>
+                                {% for extra in object.formatted_extras %}
+                                    <li>{{extra}}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+            <!-- Tour -->
+            <div class="col-md-6">
+                <div class="card mt-5">
+                    <div class="card-header text-light text-center" style="background: #58a710">Schedule Tour</div>
+                    <div class="card-body">
+                       <div class="row">
+                           <div class="col-8">
+                               <label for="">Date</label>
+                                <input type="date" class="form-control">
+                           </div>
+                           <div class="col-4">
+                              <label>Time</label>
+                               <input type="time" class = 'form-control'>
+                           </div>
+                       </div>
+                        <button class="btn btn-block mt-2" id = 'schedule-tour'>Schedule Tour</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if props %}
+            <h5 style="color: #58a710;border-bottom: thick solid #58a710;display: inline-block;margin-top: 20px;">Other Properties</h5>
+            <div class="row">
+                {% for prop in props %}
+                    <div class="col-sm-4 col-md-3">
+                        <div class="card prop">
+                          <span class="category badge badge-danger">{{ prop.category }}</span>
+                           <a href="{% url 'app:properties_detail' prop.pk %}">
+                               <img style = 'height: 250px;' src="{{ prop.image1.url }}" class="card-img-top" alt="">
+                                <div class="card-body p-2">
+                                    <p class="text-dark m-auto" style="font-size: 20px;font-weight: 500;width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{prop.name}}</p>
+                                    <p style="font-size: 18px;font-weight: 500;" class="text-muted m-auto">GHC {{ prop.price }}</p>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <p class="m-auto text-dark" style = 'font-size:14px;'>Bedroom: {{prop.bedroom}}</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="m-auto text-dark" style = 'font-size:14px;'>Bathroom: {{prop.bathroom}}</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="m-auto text-dark" style = 'font-size:14px;'>Size: {{prop.size}}Sq. Ft.</p>
+                                        </div>
+                                        <div class="col-6">
+                                            <p class="m-auto text-dark" style = 'font-size:14px;'>Location: {{prop.location}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                           </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        // A function that changes the image when a user selects it
+        let showImage = () => {
+            let imageIndex = 0;
+            $("#images > img").click(function(){
+                $("#images > img").eq(imageIndex).css('opacity','0.7');
+                imgUrl = $(this).attr('src');
+                $(this).css('opacity','1');
+                $("#main-image").attr('src',imgUrl);
+                imageIndex = $("#images > img").index($(this));
+            });
+        }
+        showImage()
+        
+        // A function that shecdules a tour for a user
+        let scheduleTour = () => {
+            $('#schedule-tour').click(function(){
+                let date = $("input[type = 'date']").val();
+                let time = $("input[type = 'time']").val();
+                console.log(date);
+                console.log(time);
+            });
+        }
+        
+        scheduleTour()
+    </script>
+{% endblock %}

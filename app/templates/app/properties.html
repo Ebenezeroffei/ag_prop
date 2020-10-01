@@ -1,0 +1,62 @@
+{% extends 'app/base.html' %}
+
+
+{% block head %}
+    <title>Properties</title>
+    <style>
+        .prop > a:hover{
+            text-decoration: none;
+            transition: all .3s ease-in-out;
+        }
+        .prop{
+            position: relative;
+        }
+        .prop:hover{
+            box-shadow: rgb(209, 209, 213) 0px 5px 15px;
+        }
+        .category{
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            padding: 5px;
+        }
+        
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container" style="margin-top: 150px">
+        <h3 class="text-muted">All Properties</h3><hr style = 'background:#58a710 '/>
+        <div class="row">
+            {% for prop in properties %}
+                <div class="col-sm-4 col-md-3">
+                    <div class="card prop">
+                      <span class="category badge badge-danger">{{ prop.category }}</span>
+                       <a href="{% url 'app:properties_detail' prop.pk %}">
+                           <img style = 'height: 250px;' src="{{ prop.image1.url }}" class="card-img-top" alt="">
+                            <div class="card-body p-2">
+                                <p class="text-dark m-auto" style="font-size: 20px;font-weight: 500;width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{prop.name}}</p>
+                                <p style="font-size: 18px;font-weight: 500;" class="text-muted m-auto">GHC {{ prop.price }}</p>
+                                <div class="row">
+                                    <div class="col-6">
+                                        <p class="m-auto text-dark" style = 'font-size:14px;'>Bedroom: {{prop.bedroom}}</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="m-auto text-dark" style = 'font-size:14px;'>Bathroom: {{prop.bathroom}}</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="m-auto text-dark" style = 'font-size:14px;'>Size: {{prop.size}}Sq. Ft.</p>
+                                    </div>
+                                    <div class="col-6">
+                                        <p class="m-auto text-dark" style = 'font-size:14px;'>Location: {{prop.location}}</p>
+                                    </div>
+                                </div>
+                            </div>
+                       </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+{% block javascript %}
+{% endblock %}

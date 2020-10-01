@@ -110,9 +110,7 @@
             
             $('#delete-blog').click(function(){
                 let blogId = $(this).data('blogId');
-                console.log(blogId)
                 $.ajax({
-//                    type: 'POST',
                     url: "{% url 'blog:delete' %}",
                     data: {
                         blogId
