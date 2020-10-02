@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 class Property(models.Model):
@@ -69,3 +70,20 @@ class InteriorFeatures(models.Model):
     
     def __str__(self):
         return f"{self.prop.name}'s interior features"
+
+class ContactDetail(models.Model):
+    """ This class stores all the contact details of a user """
+    user = models.ForeignKey(User,on_delete = models.CASCADE)
+    phone1 = models.CharField('Mobile Number 1',max_length = 20)
+    phone2 = models.CharField('Mobile Number 2 (Optional)',null = True, blank = True,max_length = 20)
+
+class ScheduleTour(models.Model):
+    """ This class schedules a tour """
+    prop = models.ForeignKey(Property,on_delete = models.CASCADE)
+    name = models.CharField(max_length = 100)
+    email = models.EmailField()
+    date = models.DateTimeField()
+    contact = models.CharField(max_length = 20)
+    
+    def __str__(self):
+        return f"{self.prop.name} on {self.date}"

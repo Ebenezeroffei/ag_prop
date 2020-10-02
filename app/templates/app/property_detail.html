@@ -19,14 +19,14 @@
             cursor: pointer;
         }
         /* Schedule Tour */
-        #schedule-tour{
+        .schedule-tour{
             color: white;
             background: #58a710;
             border: thin solid #58a710;
             transition: all .2s ease-in-out;
             border-radius: 10px 0px;
         }
-        #schedule-tour:hover{
+        .schedule-tour:hover{
             color: #58a710;
             background: white;
         }
@@ -50,6 +50,13 @@
     </style>
 {% endblock %}
 {% block content %}
+   <!-- Notification -->
+   <div id="notification" style=" width: calc(100% - 40px);transition: all .5s ease-in-out;margin-left: 20px; position: fixed; top: -100px; z-index: 4;" class = 'alert alert-info'>
+       <h4 class="alert-heading">
+           Notification
+       </h4><hr/>
+       <p></p>
+   </div>
     <div class="container-lg" style="margin-top: 150px;">
         <div class="row">
            <!-- Property Images -->
@@ -162,16 +169,17 @@
                                <input type="time" class = 'form-control'>
                            </div>
                        </div>
-                        <button class="btn btn-block mt-2" id = 'schedule-tour'>Schedule Tour</button>
+                        <button class="btn btn-block mt-2 schedule-tour">Schedule Tour</button>
                     </div>
                 </div>
             </div>
         </div>
+        <!-- Other Properties -->
         {% if props %}
             <h5 style="color: #58a710;border-bottom: thick solid #58a710;display: inline-block;margin-top: 20px;">Other Properties</h5>
             <div class="row">
                 {% for prop in props %}
-                    <div class="col-sm-4 col-md-3">
+                    <div class="col-6 col-md-3">
                         <div class="card prop">
                           <span class="category badge badge-danger">{{ prop.category }}</span>
                            <a href="{% url 'app:properties_detail' prop.pk %}">
@@ -180,16 +188,16 @@
                                     <p class="text-dark m-auto" style="font-size: 20px;font-weight: 500;width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{prop.name}}</p>
                                     <p style="font-size: 18px;font-weight: 500;" class="text-muted m-auto">GHC {{ prop.price }}</p>
                                     <div class="row">
-                                        <div class="col-6">
+                                        <div class="col-sm-6">
                                             <p class="m-auto text-dark" style = 'font-size:14px;'>Bedroom: {{prop.bedroom}}</p>
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-sm-6">
                                             <p class="m-auto text-dark" style = 'font-size:14px;'>Bathroom: {{prop.bathroom}}</p>
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-sm-6">
                                             <p class="m-auto text-dark" style = 'font-size:14px;'>Size: {{prop.size}}Sq. Ft.</p>
                                         </div>
-                                        <div class="col-6">
+                                        <div class="col-sm-6">
                                             <p class="m-auto text-dark" style = 'font-size:14px;'>Location: {{prop.location}}</p>
                                         </div>
                                     </div>
@@ -200,6 +208,21 @@
                 {% endfor %}
             </div>
         {% endif %}
+    </div>
+    <!-- Modal -->
+    <div class="modal fade" id="tourModal" tabindex="-1" aria-labelledby="tourModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header text-light" style="background: #58a710;">
+            <h5 class="modal-title" id="tourModalLabel">Schedule Tour</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true" style="color: white;">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+          </div>
+        </div>
+      </div>
     </div>
 {% endblock %}
 {% block javascript %}
@@ -218,15 +241,95 @@
         showImage()
         
         // A function that shecdules a tour for a user
-        let scheduleTour = () => {
-            $('#schedule-tour').click(function(){
+        let scheduleTour = (propId) => {
+            let scheduleButtonCalled = false;
+            
+            // A function that submits the information for a tour to be created
+            let submitTourInfo = (isLoggedIn) => {
+                let mobileNumberRegex = /[\d]+/;
+                $('#submit-tour-details').click(function(){
+                    let data = undefined; // Will contain tours details
+                    if(isLoggedIn){
+                        let mobileNumber = $('#mobile-number').val();
+                        if(mobileNumberRegex.test(mobileNumber)){
+                            console.log(mobileNumber);
+                            data  = {mobileNumber};
+                        }
+                    }
+                    else{
+                        let emailRegex = /^[a-zA-Z][a-zA-Z\d]+@[a-z]+\.[a-z]{2,5}(\.[a-z]{2,5})?$/;
+                        let name = $('#name').val();
+                        let email = $('#email').val();
+                        let mobileNumber = $('#mobile-number').val();
+                        if(name && emailRegex.test(email) && mobileNumberRegex.test(mobileNumber)){
+                            console.log(name);
+                            console.log(email);
+                            console.log(mobileNumber);
+                            data = {mobileNumber,name,email};
+                        }
+                    }
+                });
+            }
+            
+            $('.schedule-tour').first().click(function(){
                 let date = $("input[type = 'date']").val();
                 let time = $("input[type = 'time']").val();
-                console.log(date);
-                console.log(time);
+                let previousDateTime = new Date(`${date},${time}`);
+                let curentDateTime = new Date();
+                if(date && time && previousDateTime - curentDateTime > 1){
+                    $(this).attr({"data-toggle":"modal","data-target" : "#tourModal"}) // Make the button call a modal
+                    // An ajax request that will create the schedule
+                    $.get("{% url 'app:create_schedule' %}",{date,time,'message':'confirm'},function(data){
+                        if(data['isLoggedIn']){
+                            $('.modal-body').html(
+                                `<div class="form-group">
+                                   <label for="">Mobile Number</label>
+                                    <input id = 'mobile-number' type="text" pattern="[0-9]+" class="form-control form-control-sm">
+                                </div>
+                                <button id = 'submit-tour-details' class="btn btn-block schedule-tour mt-3">Submit</button>`
+                            );
+                            submitTourInfo(true)// Invoke function
+                            if(!scheduleButtonCalled){
+                                scheduleButtonCalled = true;
+                                $('.schedule-tour').first().click(); // Call the modal
+                            }
+                        }
+                        else{
+                            $('.modal-body').html(
+                                `<div class="form-group">
+                                   <label for="">Name</label>
+                                    <input id = 'name' type="text" class="form-control form-control-sm">
+                                </div>
+                                <div class="form-group">
+                                   <label for="">Email</label>
+                                    <input id = 'email' type="email" class="form-control form-control-sm">
+                                </div>
+                                <div class="form-group">
+                                   <label for="">Mobile Number</label>
+                                    <input id = 'mobile-number' type="text" pattern="[0-9]+" class="form-control form-control-sm">
+                                </div>
+                                <button class=" btn btn-block schedule-tour mt-3">Submit</button>`
+                            );
+                            submitTourInfo(false)// Invoke function
+                            if(!scheduleButtonCalled){
+                                scheduleButtonCalled = true;
+                                $('.schedule-tour').first().click(); // Call the modal
+                            }
+                        }
+                    },'json')
+                }
             });
         }
         
         scheduleTour()
+        
+        // A function that notifies a user
+        let callNotification = (info) => {
+            $('#notification > p').text(info); // Insert the notification text
+            $('#notification').css('top','150px'); // Show the notification
+            setInterval(function(){
+                $('#notification').css('top','-100px') // Hide the notification
+            },4000);
+        }        
     </script>
 {% endblock %}

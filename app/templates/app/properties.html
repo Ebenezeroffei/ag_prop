@@ -28,7 +28,7 @@
         <h3 class="text-muted">All Properties</h3><hr style = 'background:#58a710 '/>
         <div class="row">
             {% for prop in properties %}
-                <div class="col-sm-4 col-md-3">
+                <div class="col-6 col-md-3">
                     <div class="card prop">
                       <span class="category badge badge-danger">{{ prop.category }}</span>
                        <a href="{% url 'app:properties_detail' prop.pk %}">
@@ -37,16 +37,16 @@
                                 <p class="text-dark m-auto" style="font-size: 20px;font-weight: 500;width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{prop.name}}</p>
                                 <p style="font-size: 18px;font-weight: 500;" class="text-muted m-auto">GHC {{ prop.price }}</p>
                                 <div class="row">
-                                    <div class="col-6">
+                                    <div class="col-sm-6">
                                         <p class="m-auto text-dark" style = 'font-size:14px;'>Bedroom: {{prop.bedroom}}</p>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-sm-6">
                                         <p class="m-auto text-dark" style = 'font-size:14px;'>Bathroom: {{prop.bathroom}}</p>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-sm-6">
                                         <p class="m-auto text-dark" style = 'font-size:14px;'>Size: {{prop.size}}Sq. Ft.</p>
                                     </div>
-                                    <div class="col-6">
+                                    <div class="col-sm-6">
                                         <p class="m-auto text-dark" style = 'font-size:14px;'>Location: {{prop.location}}</p>
                                     </div>
                                 </div>
