@@ -80,8 +80,8 @@ class ContactDetail(models.Model):
 class ScheduleTour(models.Model):
     """ This class schedules a tour """
     prop = models.ForeignKey(Property,on_delete = models.CASCADE)
-    name = models.CharField(max_length = 100)
-    email = models.EmailField()
+    name = models.CharField(max_length = 100,null = True)
+    email = models.EmailField(null = True)
     date = models.DateTimeField()
     contact = models.CharField(max_length = 20)
     

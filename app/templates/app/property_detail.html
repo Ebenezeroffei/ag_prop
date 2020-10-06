@@ -245,15 +245,34 @@
             let scheduleButtonCalled = false;
             
             // A function that submits the information for a tour to be created
-            let submitTourInfo = (isLoggedIn) => {
-                let mobileNumberRegex = /[\d]+/;
+            let submitTourInfo = (isLoggedIn,propId,date,time) => {
+                let mobileNumberRegex = /^[\d\+][\d\s]+$/;
                 $('#submit-tour-details').click(function(){
                     let data = undefined; // Will contain tours details
                     if(isLoggedIn){
                         let mobileNumber = $('#mobile-number').val();
-                        if(mobileNumberRegex.test(mobileNumber)){
+                        let name = $('#name').val();
+                        if(name && mobileNumberRegex.test(mobileNumber)){
                             console.log(mobileNumber);
-                            data  = {mobileNumber};
+                            data  = {
+                                'message':'create',
+                                mobileNumber,
+                                propId,
+                                date,
+                                time
+                            };
+                            //  An ajax request that will create the schedule with the needed details
+                            $.ajax({
+                                url: "{% url 'app:create_schedule' %}",
+                                data: data,
+                                dataType: 'json',
+                                success: function(){
+                                    alert("Done")
+                                }
+                            });
+                        }
+                        else{
+                            $('#modal-error').text('Enter a valid mobile number.');
                         }
                     }
                     else{
@@ -265,7 +284,18 @@
                             console.log(name);
                             console.log(email);
                             console.log(mobileNumber);
-                            data = {mobileNumber,name,email};
+                            data = {
+                                'message':'create',
+                                mobileNumber,
+                                name,
+                                email,
+                                propId,
+                                date,
+                                time
+                            };
+                        }
+                        else{
+                            $('#modal-error').text('Enter a valid email and mobile number.')
                         }
                     }
                 });
@@ -282,13 +312,18 @@
                     $.get("{% url 'app:create_schedule' %}",{date,time,'message':'confirm'},function(data){
                         if(data['isLoggedIn']){
                             $('.modal-body').html(
-                                `<div class="form-group">
+                                `<p class = 'text-danger small m-auto' id = 'modal-error'></p>
+                                <div class="form-group">
+                                   <label for="">Name</label>
+                                    <input id = 'name' value = "${data['name']}" type="text" class="form-control form-control-sm">
+                                </div>
+                                <div class="form-group">
                                    <label for="">Mobile Number</label>
                                     <input id = 'mobile-number' type="text" pattern="[0-9]+" class="form-control form-control-sm">
                                 </div>
                                 <button id = 'submit-tour-details' class="btn btn-block schedule-tour mt-3">Submit</button>`
                             );
-                            submitTourInfo(true)// Invoke function
+                            submitTourInfo(true,propId,date,time)// Invoke function
                             if(!scheduleButtonCalled){
                                 scheduleButtonCalled = true;
                                 $('.schedule-tour').first().click(); // Call the modal
@@ -296,7 +331,8 @@
                         }
                         else{
                             $('.modal-body').html(
-                                `<div class="form-group">
+                                `<p class = 'text-danger small m-auto' id = 'modal-error'></p>
+                                <div class="form-group">
                                    <label for="">Name</label>
                                     <input id = 'name' type="text" class="form-control form-control-sm">
                                 </div>
@@ -310,7 +346,7 @@
                                 </div>
                                 <button class=" btn btn-block schedule-tour mt-3">Submit</button>`
                             );
-                            submitTourInfo(false)// Invoke function
+                            submitTourInfo(false,propId,date,time)// Invoke function
                             if(!scheduleButtonCalled){
                                 scheduleButtonCalled = true;
                                 $('.schedule-tour').first().click(); // Call the modal
