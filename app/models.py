@@ -73,9 +73,12 @@ class InteriorFeatures(models.Model):
 
 class ContactDetail(models.Model):
     """ This class stores all the contact details of a user """
-    user = models.ForeignKey(User,on_delete = models.CASCADE)
+    user = models.OneToOneField(User,on_delete = models.CASCADE)
     phone1 = models.CharField('Mobile Number 1',max_length = 20)
     phone2 = models.CharField('Mobile Number 2 (Optional)',null = True, blank = True,max_length = 20)
+
+    def __str__(self):
+        return f"{self.user.username}'s contacts"
 
 class ScheduleTour(models.Model):
     """ This class schedules a tour """

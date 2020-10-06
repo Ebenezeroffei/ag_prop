@@ -246,6 +246,7 @@
             
             // A function that submits the information for a tour to be created
             let submitTourInfo = (isLoggedIn,propId,date,time) => {
+                console.log('Hmmm')
                 let mobileNumberRegex = /^[\d\+][\d\s]+$/;
                 $('#submit-tour-details').click(function(){
                     let data = undefined; // Will contain tours details
@@ -276,6 +277,7 @@
                         }
                     }
                     else{
+                        console.log("Nice")
                         let emailRegex = /^[a-zA-Z][a-zA-Z\d]+@[a-z]+\.[a-z]{2,5}(\.[a-z]{2,5})?$/;
                         let name = $('#name').val();
                         let email = $('#email').val();
@@ -293,6 +295,15 @@
                                 date,
                                 time
                             };
+                            //  An ajax request that will create the schedule with the needed details
+                            $.ajax({
+                                url: "{% url 'app:create_schedule' %}",
+                                data: data,
+                                dataType: 'json',
+                                success: function(){
+                                    alert("Done")
+                                }
+                            });
                         }
                         else{
                             $('#modal-error').text('Enter a valid email and mobile number.')
@@ -319,9 +330,9 @@
                                 </div>
                                 <div class="form-group">
                                    <label for="">Mobile Number</label>
-                                    <input id = 'mobile-number' type="text" pattern="[0-9]+" class="form-control form-control-sm">
+                                    <input id = 'mobile-number' value = "${data['contact']}" type="text" pattern="[0-9]+" class="form-control form-control-sm">
                                 </div>
-                                <button id = 'submit-tour-details' class="btn btn-block schedule-tour mt-3">Submit</button>`
+                                <button id = 'submit-tour-details' data-dismiss = 'modal' class="btn btn-block schedule-tour mt-3">Submit</button>`
                             );
                             submitTourInfo(true,propId,date,time)// Invoke function
                             if(!scheduleButtonCalled){
@@ -342,9 +353,9 @@
                                 </div>
                                 <div class="form-group">
                                    <label for="">Mobile Number</label>
-                                    <input id = 'mobile-number' type="text" pattern="[0-9]+" class="form-control form-control-sm">
+                                    <input value = "${data['contact']}" id = 'mobile-number' type="text" pattern="[0-9]+" class="form-control form-control-sm">
                                 </div>
-                                <button class=" btn btn-block schedule-tour mt-3">Submit</button>`
+                                <button  id = 'submit-tour-details' data-dismiss = 'modal' class=" btn btn-block schedule-tour mt-3">Submit</button>`
                             );
                             submitTourInfo(false,propId,date,time)// Invoke function
                             if(!scheduleButtonCalled){
@@ -357,7 +368,7 @@
             });
         }
         
-        scheduleTour()
+        scheduleTour({{ object.id }})
         
         // A function that notifies a user
         let callNotification = (info) => {
