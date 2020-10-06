@@ -267,7 +267,7 @@
             font-weight: 500;
         }
         /* Media QUary 0px - 600px */
-        @media only screen and (max-width:600px){
+        @media only screen and (max-width:800px){
             nav .container-lg > ul{
                 opacity: 0;
                 visibility: hidden;
@@ -359,7 +359,7 @@
             // Hide the phone menu
             let phoneMenu = $('#phone-menu').slideUp(0);
             window.onresize = () => {
-                if(window.innerWidth < 600){
+                if(window.innerWidth < 800){
                     // Hide the phone menu
                     phoneMenu.slideUp(100);
                     // Close the hamburger menu

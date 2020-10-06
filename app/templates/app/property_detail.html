@@ -83,7 +83,7 @@
                         </div>
                         <div class="col-sm-4 text-center border-right">
                             <p style="font-size: 18px;font-weight: 500;" class="text-muted m-auto">Location</p>
-                            <p style="font-size: 25px;font-weight: 500; color:#58a710 ">{{ object.location }}</p>
+                            <p style="font-size: 25px;font-weight: 500; color:#58a710 ">{{ object.town_or_city }}-{{ object.state_or_region }}</p>
                         </div>
                         <div class="col-sm-4 text-center">
                             <p style="font-size: 18px;font-weight: 500;" class="text-muted m-auto">Size</p>
@@ -194,11 +194,11 @@
                                         <div class="col-sm-6">
                                             <p class="m-auto text-dark" style = 'font-size:14px;'>Bathroom: {{prop.bathroom}}</p>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-12">
                                             <p class="m-auto text-dark" style = 'font-size:14px;'>Size: {{prop.size}}Sq. Ft.</p>
                                         </div>
-                                        <div class="col-sm-6">
-                                            <p class="m-auto text-dark" style = 'font-size:14px;'>Location: {{prop.location}}</p>
+                                        <div class="col-sm-12">
+                                            <p class="m-auto text-dark" style = 'font-size:14px;'>Location: {{ prop.town_or_city }}-{{prop.state_or_region}}</p>
                                         </div>
                                     </div>
                                 </div>

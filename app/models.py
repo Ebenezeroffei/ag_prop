@@ -10,10 +10,10 @@ class Property(models.Model):
     ]
     name = models.CharField(max_length = 100);
     price = models.DecimalField(decimal_places = 2,max_digits = 100000)
-    location =  models.CharField(max_length = 100)
+    state_or_region =  models.CharField("State/Region",max_length = 100,default = 'Greater Accra')
+    town_or_city = models.CharField("Town/City",max_length = 100,default = 'Dansoman')
     size = models.DecimalField(decimal_places = 2,max_digits = 50)
     extras = models.CharField(max_length = 500)
-    features = models.CharField(max_length = 500)
     bedroom = models.PositiveSmallIntegerField(default = 0)
     bathroom = models.PositiveSmallIntegerField(default = 0)
     category = models.CharField(max_length = 10,choices = category_choices,default = 'Sale')
@@ -50,6 +50,7 @@ class ExteriorFeatures(models.Model):
         ('Yes','Yes'),
         ('No','No')
     ]
+
     prop = models.OneToOneField(Property,on_delete = models.CASCADE)
     garage = models.PositiveSmallIntegerField(default = 0);
     parking = models.PositiveSmallIntegerField(default = 0);

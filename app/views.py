@@ -6,6 +6,7 @@ from django.utils.decorators import method_decorator
 from django.http import JsonResponse
 from django.contrib.auth.decorators import user_passes_test,login_required
 from .models import Property,ScheduleTour
+from .forms import PropertyForm,InteriorFeaturesForm,ExteriorFeaturesForm
 
 # Create your views here.
 class IndexView(generic.View):
@@ -28,6 +29,26 @@ class PropertiesView(generic.ListView):
     template_name = 'app/properties.html'
     context_object_name = 'properties'
     
+
+# Don't forget to add admin mixins
+class PropertiesCreateView(generic.View):
+    form_class1 = PropertyForm
+    form_class2 = InteriorFeaturesForm
+    form_class3 = ExteriorFeaturesForm
+    template_name = 'app/property_form.html'
+
+    def get(self,request,*args,**kwargs):
+        form1 = self.form_class1()
+        form2 = self.form_class2()
+        form3 = self.form_class3()
+        context = {
+            'form1': form1,
+            'form2': form2,
+            'form3': form3
+        }
+        return render(request,self.template_name,context)
+
+
 class PropertiesDetailView(generic.DetailView):
     """ This class displays the details of the property """
     model = Property
@@ -50,13 +71,13 @@ class CreateSheduleView(generic.View):
             # User is logged in
             if request.user.is_authenticated: # A user has logged in
                 data['isLoggedIn'] = True
+                # Check to see if user's name has already been registered in the database
                 data['name'] = f"{request.user.first_name} {request.user.last_name}" if request.user.first_name and request.user.last_name else ''
+                # Check to see if user's contact has already been registered in the database
                 try:
                     data['contact'] = request.user.contactdetail.phone1
                 except AttributeError:
                     data['contact'] = ''
-    #            # Check if the user has contact details
-    #            data['contact'] = True if request.user.contactdetail.phone1 else False
             # User isn't logged in
             else:
                 data['isLoggedIn'] = False

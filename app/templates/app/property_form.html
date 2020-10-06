@@ -1,0 +1,169 @@
+{% extends 'app/admin_base.html' %}
+
+
+{% block head %}
+    <title>New Property</title>
+    <style>
+        /* Submit Button */
+        input[type = 'submit'], #go-back{
+            border-radius: 10px 0px;
+            transition: all .2s ease-in-out;
+            border: thin solid #58a710;
+            background: #58a710;
+            color: white;
+            margin-top: 10px;
+        }
+        input[type = 'submit']:hover, #go-back:hover{
+            color: #58a710;
+            background: white;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container" style="margin-top: 150px">
+      <form action="." method="post">
+        <!-- General Features -->
+        <div class="card">
+            <div class="card-header text-light" style="background:#58a710 ">General Features</div>
+            <div class="card-body">
+               <div class="row">
+                   <div class="col-sm-6">
+                       <!-- Name -->
+                       <div class="form-group">
+                           {{form1.name.label_tag}}
+                           {{form1.name}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Price -->
+                       <div class="form-group">
+                           {{form1.price.label_tag}}
+                           {{form1.price}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Category -->
+                       <div class="form-group">
+                           {{form1.category.label_tag}}
+                           {{form1.category}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- State or Region -->
+                       <div class="form-group">
+                           {{form1.state_or_region.label_tag}}
+                           {{form1.state_or_region}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Town or City -->
+                       <div class="form-group">
+                           {{form1.town_or_city.label_tag}}
+                           {{form1.town_or_city}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Size -->
+                       <div class="form-group">
+                           {{form1.size.label_tag}}
+                           {{form1.size}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Bedroom -->
+                       <div class="form-group">
+                           {{form1.bedroom.label_tag}}
+                           {{form1.bedroom}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Bathroom -->
+                       <div class="form-group">
+                           {{form1.bathroom.label_tag}}
+                           {{form1.bathroom}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Extras -->
+                       <div class="form-group">
+                           {{form1.extras.label_tag}}
+                           {{form1.extras}}
+                       </div>
+                   </div>
+               </div>
+            </div>
+        </div>
+
+        <!-- Interior Features -->
+        <div class="card mt-3">
+            <div class="card-header text-light" style="background:#58a710 ">Interior Features</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                       <!-- Kitchen -->
+                       <div class="form-group">
+                           {{form2.kitchen.label_tag}}
+                           {{form2.kitchen}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Reception -->
+                       <div class="form-group">
+                           {{form2.reception.label_tag}}
+                           {{form2.reception}}
+                       </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Exterior Features -->
+        <div class="card mt-3">
+            <div class="card-header text-light" style="background:#58a710 ">Exterior Features</div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-sm-6">
+                       <!-- Garage -->
+                       <div class="form-group">
+                           {{form3.garage.label_tag}}
+                           {{form3.garage}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Parking -->
+                       <div class="form-group">
+                           {{form3.parking.label_tag}}
+                           {{form3.parking}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Domestic Accomodation -->
+                       <div class="form-group">
+                           {{form3.domestic_accomodation.label_tag}}
+                           {{form3.domestic_accomodation}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Security -->
+                       <div class="form-group">
+                           {{form3.security.label_tag}}
+                           {{form3.security}}
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Pool -->
+                       <div class="form-group">
+                           {{form3.pool.label_tag}}
+                           {{form3.pool}}
+                       </div>
+                   </div>
+                </div>
+            </div>
+        </div>
+        <!-- Submit -->
+        <div style="max-width: 400px;margin: 20px auto;">
+            <input type="submit" value="Save" class="btn btn-block">
+        </div>
+      </form>
+    </div>
+{% endblock %}
