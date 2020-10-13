@@ -21,7 +21,8 @@
 {% endblock %}
 {% block content %}
     <div class="container" style="margin-top: 150px">
-      <form action="." method="post">
+      <form action="." method="post" enctype="multipart/form-data">
+       {% csrf_token %}
         <!-- General Features -->
         <div class="card">
             <div class="card-header text-light" style="background:#58a710 ">General Features</div>
@@ -67,6 +68,7 @@
                        <div class="form-group">
                            {{form1.size.label_tag}}
                            {{form1.size}}
+                            <p class = 'small text-muted m-auto'>{{ form1.size.help_text }}</p>
                        </div>
                    </div>
                    <div class="col-sm-6">
@@ -88,6 +90,107 @@
                        <div class="form-group">
                            {{form1.extras.label_tag}}
                            {{form1.extras}}
+                           <p class = 'small text-muted m-auto'>{{ form1.extras.help_text }}</p>
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Image 1 -->
+                       <div class="form-group">
+                           {{form1.image1.label_tag}}
+                           <p class="text-info small m-auto image-info">No image has been chosen</p>
+                           <div class="input-group mb-3 input-group-sm">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">Upload</span>
+                              </div>
+                              <div class="custom-file">
+                                <input type="file" accept="image/*" class="custom-file-input" id="{{form1.image1.id_for_label}}" name="image1" aria-describedby="inputGroupFileAddon01">
+                                {% if update %}
+                                    <label class="custom-file-label" for="{{form1.image1.id_for_label}}">{{image1}}</label>
+                                {% else %}
+                                    <label class="custom-file-label" for="{{form1.image1.id_for_label}}">Choose File</label>
+                                {% endif %}
+                              </div>
+                            </div>
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Image 2 -->
+                       <div class="form-group">
+                           {{form1.image2.label_tag}}
+                            <p class="text-info small m-auto image-info">No image has been chosen</p>
+                           <div class="input-group mb-3 input-group-sm">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">Upload</span>
+                              </div>
+                              <div class="custom-file">
+                                <input type="file" accept="image/*" class="custom-file-input" id="{{form12image1.id_for_label}}" name="image2" aria-describedby="inputGroupFileAddon01">
+                                {% if update %}
+                                    <label class="custom-file-label" for="{{form1.image1.id_for_label}}">{{image1}}</label>
+                                {% else %}
+                                    <label class="custom-file-label" for="{{form1.image1.id_for_label}}">Choose File</label>
+                                {% endif %}
+                              </div>
+                            </div>
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Image 3 -->
+                       <div class="form-group">
+                           {{form1.image3.label_tag}}
+                           <p class="text-info small m-auto image-info">No image has been chosen</p>
+                           <div class="input-group mb-3 input-group-sm">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">Upload</span>
+                              </div>
+                              <div class="custom-file">
+                                <input type="file" accept="image/*" class="custom-file-input" id="{{form1.image3.id_for_label}}" name="image3" aria-describedby="inputGroupFileAddon01">
+                                {% if update %}
+                                    <label class="custom-file-label" for="{{form1.image1.id_for_label}}">{{image1}}</label>
+                                {% else %}
+                                    <label class="custom-file-label" for="{{form1.image1.id_for_label}}">Choose File</label>
+                                {% endif %}
+                              </div>
+                            </div>
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Image 4 -->
+                       <div class="form-group">
+                           {{form1.image4.label_tag}}
+                           <p class="text-info small m-auto image-info">No image has been chosen</p>
+                           <div class="input-group mb-3 input-group-sm">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">Upload</span>
+                              </div>
+                              <div class="custom-file">
+                                <input type="file" accept="image/*" class="custom-file-input" id="{{form1.image4.id_for_label}}" name="image4" aria-describedby="inputGroupFileAddon01">
+                                {% if update %}
+                                    <label class="custom-file-label" for="{{form1.image1.id_for_label}}">{{image1}}</label>
+                                {% else %}
+                                    <label class="custom-file-label" for="{{form1.image1.id_for_label}}">Choose File</label>
+                                {% endif %}
+                              </div>
+                            </div>
+                       </div>
+                   </div>
+                   <div class="col-sm-6">
+                       <!-- Image 5 -->
+                       <div class="form-group">
+                           {{form1.image5.label_tag}}
+                           <p class="text-info small m-auto image-info">No image has been chosen</p>
+                           <div class="input-group mb-3 input-group-sm">
+                              <div class="input-group-prepend">
+                                <span class="input-group-text">Upload</span>
+                              </div>
+                              <div class="custom-file">
+                                <input type="file" accept="image/*" class="custom-file-input" id="{{form1.image5.id_for_label}}" name="image5" aria-describedby="inputGroupFileAddon01">
+                                {% if update %}
+                                    <label class="custom-file-label" for="{{form1.image1.id_for_label}}">{{image1}}</label>
+                                {% else %}
+                                    <label class="custom-file-label" for="{{form1.image1.id_for_label}}">Choose File</label>
+                                {% endif %}
+                              </div>
+                            </div>
                        </div>
                    </div>
                </div>
@@ -166,4 +269,19 @@
         </div>
       </form>
     </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        // A function that checks wheather an image has been selected for uploading
+        let chooseImage = () => {
+            $('input[type=file]').change(function(e){
+//                e.preventDefault();
+                let imagePath = $(this).val();
+                $(this).parent().find('label').text(imagePath);
+                let index = $('input[type=file]').index($(this));
+                $('.image-info').eq(index).text("An image has been chosen");
+            })
+        }
+        chooseImage();
+    </script>
 {% endblock %}
