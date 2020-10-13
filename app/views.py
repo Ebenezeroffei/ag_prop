@@ -8,6 +8,7 @@ from django.http import JsonResponse,HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test,login_required
 from django.urls import reverse
 from .models import Property,ScheduleTour
+from blog.models import Blog
 from .forms import PropertyForm,InteriorFeaturesForm,ExteriorFeaturesForm
 
 # Create your views here.
@@ -19,12 +20,18 @@ class IndexView(generic.View):
     
     
 class AdminIndexView(generic.View):
-    template_name = 'app/admin_base.html'
+    template_name = 'app/admin_index.html'
     
     @method_decorator(login_required(login_url = '/admin/signin/'))
     @method_decorator(user_passes_test(lambda x : x.is_superuser))
     def dispatch(self,request,*args,**kwargs):
-        return render(request,self.template_name)
+        context = {
+            'schedules': ScheduleTour.objects.all()[:5],
+            'properties': Property.objects.all()[:5],
+            'blogs': Blog.objects.all()[:5]
+        }
+        return render(request,self.template_name,context)
+
     
 # Dont forget to add some mixins
 class AdminPropertiesView(generic.ListView):

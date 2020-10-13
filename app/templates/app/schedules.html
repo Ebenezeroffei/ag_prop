@@ -48,7 +48,7 @@
                         <li class = 'list-group-item p-2'>
                             <div class="row">
                                 <div class="col-6 col-md-3 col-lg-4">
-                                    <p class="small text-dark">{{schedule.prop}}</p>
+                                    <a class="small text-dark" href = "{% url 'app:properties_detail' schedule.prop.pk %}">{{schedule.prop}}</a>
                                 </div>
                                 <div class="col-3 col-md-3 col-lg-2">
                                     <p class="small text-dark text-center">{{schedule.date}}</p>

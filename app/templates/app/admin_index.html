@@ -1,0 +1,178 @@
+{% extends 'app/admin_base.html' %}
+
+
+{% block head %}
+    <title>Admin Dashboard</title>
+    <style>
+        /* Schedule Tour */
+        /* Media query 0px - 990px */
+        @media only screen and (max-width:990px){
+            .name{
+                display: none;
+            }
+        }
+
+        /* Media query 0px - 770px */
+        @media only screen and (max-width:770px){
+            .email{
+                display: none;
+            }
+        }
+
+        /* Properties */
+        .prop > a:hover{
+            text-decoration: none;
+            transition: all .3s ease-in-out;
+        }
+        .prop{
+            position: relative;
+        }
+        .prop:hover{
+            box-shadow: rgb(209, 209, 213) 0px 5px 15px;
+        }
+        .category{
+            position: absolute;
+            top: 5px;
+            left: 5px;
+            padding: 5px;
+        }
+
+        /* Blog  */
+        #blog > div > a:hover{
+            text-decoration: none;
+        }
+        #blog > div > a > .card > div > h4{
+            color: #393939;
+            font-size: 20px;
+            font-weight: 600;
+            transition: color .1s ease-in-out;
+        }
+        #blog > div:hover > a > .card > div > h4{
+            color: #159fdc;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div style="margin-top: 120px" class="container-fluid">
+        <h3 class = 'text-muted'>Admin Dashboard</h3><hr style = 'background:#58a710 '/>
+        <!-- Recent Scheduled Tour -->
+        <div class="card mt-3">
+            <div class="card-header text-light" style="background:#58a710 ">Recent Requests To Schedule Tour</div>
+            {% if schedules %}
+                <!-- Headers -->
+                <div class="row">
+                    <div class="col-6 col-md-3 col-lg-4 mt-2">
+                        <p class="small text-muted ml-2">Property</p>
+                    </div>
+                    <div class="col-3 col-md-3 col-lg-2 mt-2">
+                        <p class="small text-muted text-center">Date/Time</p>
+                    </div>
+                    <div class="col-0 col-md-0 col-lg-2 name mt-2">
+                        <p class="small text-muted text-center">Name</p>
+                    </div>
+                    <div class="col-0 col-md-3 col-lg-2 email mt-2">
+                        <p class="small text-muted text-center">Email</p>
+                    </div>
+                    <div class="col-3 col-md-3 col-lg-2 mt-2">
+                        <p class="small text-muted text-center">Mobile No.</p>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for schedule in schedules %}
+                        <li class = 'list-group-item p-2'>
+                            <div class="row">
+                                <div class="col-6 col-md-3 col-lg-4">
+                                    <a class="small text-dark" href = "{% url 'app:properties_detail' schedule.prop.pk %}">{{schedule.prop}}</a>
+                                </div>
+                                <div class="col-3 col-md-3 col-lg-2">
+                                    <p class="small text-dark text-center">{{schedule.date}}</p>
+                                </div>
+                                <div class="col-0 col-md-0 col-lg-2 name">
+                                    <p class="small text-dark text-center">{{schedule.name}}</p>
+                                </div>
+                                <div class="col-0 col-md-3 col-lg-2 email">
+                                    <p class="small text-dark text-center">{{schedule.email}}</p>
+                                </div>
+                                <div class="col-3 col-md-3 col-lg-2">
+                                    <p class="small text-dark text-center">{{schedule.contact}}</p>
+                                </div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <!-- No Schedules -->
+                <div class="card-body">
+                   <h3 class="text-muted text-center">No user has scheduled for a tour</h3>
+                </div>
+            {% endif %}
+        </div>
+        <!-- Recent Properties -->
+        <div class="card mt-3">
+            <div class="card-header text-light" style="background:#58a710 ">Recent Properties</div>
+            {% if properties %}
+                <div class="row p-2">
+                    {% for prop in properties %}
+                        <div class="col-6 col-md-4 col-lg-3 mt-2">
+                            <div class="card prop">
+                              <span class="category badge badge-danger">{{ prop.category }}</span>
+                               <a href="{% url 'app:properties_detail' prop.pk %}">
+                                   <img style = 'height: 250px;' src="{{ prop.image1.url }}" class="card-img-top" alt="">
+                                    <div class="card-body p-2">
+                                        <p class="text-dark m-auto" style="font-size: 20px;font-weight: 500;width: 100%;text-overflow: ellipsis;overflow: hidden;white-space: nowrap;">{{prop.name}}</p>
+                                        <p style="font-size: 18px;font-weight: 500;" class="text-muted m-auto">GHC {{ prop.price }}</p>
+                                        <div class="row">
+                                            <div class="col-sm-6">
+                                                <p class="m-auto text-dark" style = 'font-size:14px;'>Bedroom: {{prop.bedroom}}</p>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <p class="m-auto text-dark" style = 'font-size:14px;'>Bathroom: {{prop.bathroom}}</p>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <p class="m-auto text-dark" style = 'font-size:14px;'>Size: {{prop.size}}Sq. Ft.</p>
+                                            </div>
+                                            <div class="col-sm-12">
+                                                <p class="m-auto text-dark" style = 'font-size:14px;'>Location: {{ prop.town_or_city }}-{{prop.state_or_region}}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                               </a>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card-body">
+                    <!-- No Property -->
+                   <h3 class="text-muted text-center">You haven't added any property..</h3>
+                </div>
+            {% endif %}
+        </div>
+        <!-- Recent Blogs -->
+        <div class="card mt-3">
+            <div class="card-header text-light" style="background:#58a710 ">Recent Blogs</div>
+            {% if blogs %}
+                <div class="row p-2" id="blog">
+                    {% for blog in blogs %}
+                        <div class="mt-2 col-sm-6 col-md-4 col-lg-3">
+                           <a href="{% url 'blog:detail' blog.pk %}">
+                               <div class="card h-100">
+                                    <img src="{{blog.image.url}}" class="card-img-top" alt="Blog Image">
+                                    <div style="margin: 10px 5px;">
+                                        <h4>{{ blog.title }}</h4>
+                                        <p class = 'text-muted small m-auto'>Posted on: {{ blog.date|date:'jS M, Y' }} - {{ blog.date|time:'g:i:sa' }}</p>
+                                    </div>
+                                </div>
+                           </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="card-body">
+                    <!-- No Blogs -->
+                   <h3 class="text-muted text-center">You haven't created any blogs..</h3>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

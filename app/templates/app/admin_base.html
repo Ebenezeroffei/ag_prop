@@ -92,7 +92,7 @@
             
         }
         /* Speacial Design For Logout */
-        nav .container-lg > ul > li:nth-child(3):hover  > a{
+        nav .container-lg > ul > li:nth-child(4):hover  > a{
             color: crimson;
         }
         .special::after, .special::before{
@@ -115,7 +115,7 @@
             width: 100%;
         }
         
-        .special:nth-child(3)::after, .special:nth-child(3)::before{
+        .special:nth-child(4)::after, .special:nth-child(4)::before{
             background: crimson;
         }
         /* Submit Button */
@@ -266,8 +266,8 @@
             color: #58a710;
             font-weight: 500;
         }
-        /* Media QUary 0px - 600px */
-        @media only screen and (max-width:800px){
+        /* Media QUary 0px - 900px */
+        @media only screen and (max-width:900px){
             nav .container-lg > ul{
                 opacity: 0;
                 visibility: hidden;
@@ -288,23 +288,25 @@
     <!-- Navbar -->
     <nav>
        <div class="container-lg">
-            <a href="">
+            <a href="{% url 'app:admin' %}">
                 <img width="70px" src="{% static 'app/images/logo.jpg' %}" alt="Logo">
                 <span>Admin</span>
             </a>
             <ul>
-                <li class="special"><a href="">Properties</a></li>
+                <li class="special"><a href="{% url 'app:admin_properties' %}">Properties</a></li>
                 <li class="special"><a href="{% url 'blog:admin_home' %}">Blog</a></li>
+                <li class="special"><a href="{% url 'app:schedules' %}">Schedules</a></li>
                 <li class="special"><a href="{% url 'user:logout_admin' %}">Logout</a></li>
-                <li class="special-button"><a href="{% url 'user:logout_admin' %}" class="btn text-light">+ Property</a></li>
-                <li class="special-button"><a href="{% url 'user:logout_admin' %}" class="btn text-light">+ Blog</a></li>
+                <li class="special-button"><a href="{% url 'app:property_create' %}" class="btn text-light">+ Property</a></li>
+                <li class="special-button"><a href="{% url 'blog:create' %}" class="btn text-light">+ Blog</a></li>
             </ul>
             <div style="clear: both"></div>
             <!-- Phone Menu -->
             <div id="phone-menu">
                 <ul>
-                    <li><a href="">Properties</a></li>
+                    <li><a href="{% url 'app:admin_properties' %}">Properties</a></li>
                     <li><a href="{% url 'blog:admin_home' %}">Blog</a></li>
+                    <li><a href="{% url 'app:schedules' %}">Schedules</a></li>
                     <li><a href="{% url 'user:logout_admin' %}" style="color: crimson;">Logout</a></li>
                 </ul>
             </div>
@@ -359,7 +361,7 @@
             // Hide the phone menu
             let phoneMenu = $('#phone-menu').slideUp(0);
             window.onresize = () => {
-                if(window.innerWidth < 800){
+                if(window.innerWidth < 900){
                     // Hide the phone menu
                     phoneMenu.slideUp(100);
                     // Close the hamburger menu
