@@ -113,6 +113,10 @@ class ScheduleTour(models.Model):
     email = models.EmailField(null = True)
     date = models.DateTimeField()
     contact = models.CharField(max_length = 20)
+    accepted = models.BooleanField(default = False)
+
+    class Meta:
+        ordering = ['-accepted']
     
     def __str__(self):
         return f"{self.prop.name} on {self.date}"

@@ -1,0 +1,143 @@
+{% extends 'app/admin_base.html' %}
+
+
+{% block head %}
+    <title>Schedules</title>
+    <style>
+        /* Media query 0px - 990px */
+        @media only screen and (max-width:990px){
+            .name{
+                display: none;
+            }
+        }
+
+        /* Media query 0px - 770px */
+        @media only screen and (max-width:770px){
+            .email{
+                display: none;
+            }
+        }
+    </style>
+{% endblock %}
+{% block content %}
+    <div class="container-fluid" id="schedules-container" style="margin-top: 120px;">
+        {% if schedules %}
+           <div id = 'schedules'>
+               {% csrf_token %}
+                <h3 class = 'text-muted'>Schedules</h3><hr style = 'background:#58a710 '/>
+                <!-- Headers -->
+                <div class="row">
+                    <div class="col-6 col-md-3 col-lg-4">
+                        <p class="small text-muted ml-2">Property</p>
+                    </div>
+                    <div class="col-3 col-md-3 col-lg-2">
+                        <p class="small text-muted text-center">Date/Time</p>
+                    </div>
+                    <div class="col-0 col-md-0 col-lg-2 name">
+                        <p class="small text-muted text-center">Name</p>
+                    </div>
+                    <div class="col-0 col-md-3 col-lg-2 email">
+                        <p class="small text-muted text-center">Email</p>
+                    </div>
+                    <div class="col-3 col-md-3 col-lg-2">
+                        <p class="small text-muted text-center">Mobile No.</p>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    {% for schedule in schedules %}
+                        <li class = 'list-group-item p-2'>
+                            <div class="row">
+                                <div class="col-6 col-md-3 col-lg-4">
+                                    <p class="small text-dark">{{schedule.prop}}</p>
+                                </div>
+                                <div class="col-3 col-md-3 col-lg-2">
+                                    <p class="small text-dark text-center">{{schedule.date}}</p>
+                                </div>
+                                <div class="col-0 col-md-0 col-lg-2 name">
+                                    <p class="small text-dark text-center">{{schedule.name}}</p>
+                                </div>
+                                <div class="col-0 col-md-3 col-lg-2 email">
+                                    <p class="small text-dark text-center">{{schedule.email}}</p>
+                                </div>
+                                <div class="col-3 col-md-3 col-lg-2">
+                                    <p class="small text-dark text-center">{{schedule.contact}}</p>
+                                </div>
+                            </div>
+                            {% if not schedule.accepted %}
+                                <button class="btn btn-sm btn-success accept ml-2" data-schedule-id = "{{ schedule.id }}">Accept</button>
+                            {% endif %}
+                            <button class="btn btn-sm btn-danger ml-2 reject" data-schedule-id = "{{ schedule.id }}">Reject</button>
+                        </li>
+                    {% endfor %}
+                </ul>
+           </div>
+        {% else %}
+            <!-- No Schedules -->
+           <h3 class="text-muted text-center">No User Has Scheduled For A Tour</h3>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block javascript %}
+    <script>
+        // A function that accepts or rejects a request to schedule a tour
+        let acceptOrReject = () => {
+            // Accept a request
+            $('.accept').click(function(){
+                let scheduleId = $(this).data('schedule-id');
+                let ele = $(this);
+                $.post(
+                    "{% url 'app:accept_or_reject_request' %}",
+                    {
+                        scheduleId,
+                        'message': 'accept',
+                        'csrfmiddlewaretoken': $('input[name = csrfmiddlewaretoken]').val()
+                    },
+                    function(data){
+                        // Remove the button
+                        ele.fadeOut(function(){
+                            $(this).remove();
+                        })
+                    },
+                    'json'
+                );
+            });
+
+            $('.reject').click(function(){
+                let scheduleId = $(this).data('schedule-id');
+                let ele = $(this).parent();
+                $.post(
+                    "{% url 'app:accept_or_reject_request' %}",
+                    {
+                        scheduleId,
+                        'message': 'reject',
+                        'csrfmiddlewaretoken': $('input[name = csrfmiddlewaretoken]').val()
+                    },
+                    function(data){
+                        if(data['count'] == 0){
+                            // Remove the whole schedules list group
+                            $('#schedules').slideUp(function(){
+                                $(this).remove();
+                                // Display the default message when there is no schedule
+                                $('#schedules-container').append(
+                                    `<!-- No Schedules -->
+                                    <h3 class="text-muted text-center">No User Has Scheduled For A Tour</h3>`
+                                );
+                            })
+                        }
+                        else{
+                            // Remove the list item
+                            ele.slideUp(function(){
+                                $(this).remove();
+                            });
+                        }
+
+                    },
+                    'json'
+                );
+            });
+            // Reject a request
+        }
+
+        acceptOrReject()
+    </script>
+{% endblock %}

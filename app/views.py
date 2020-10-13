@@ -2,6 +2,7 @@ from datetime import datetime
 import pytz
 from django.shortcuts import render,get_object_or_404
 from django.views import generic
+from django.core.mail import send_mail
 from django.utils.decorators import method_decorator
 from django.http import JsonResponse,HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test,login_required
@@ -146,6 +147,13 @@ class PropertiesDetailView(generic.DetailView):
         context = super().get_context_data(*args,**kwargs)
         context['props'] = [super().get_object()]
         return context
+
+# Dont forget to add some mixins
+class SchedulesView(generic.ListView):
+    """ This class displays all the schedules """
+    model = ScheduleTour
+    template_name = 'app/schedules.html'
+    context_object_name = 'schedules'
     
     
 class CreateSheduleView(generic.View):
@@ -232,3 +240,28 @@ class DeletePropertyView(generic.View):
         # Delete Image from the disk
         data = {'count': Property.objects.count()}
         return JsonResponse(data)
+
+
+class AcceptOrRejectRequestView(generic.View):
+    """ This function either accepts of rejects a request to schedule a tour """
+
+    def post(self,request,*args,**kwargs):
+        schedule_id = int(request.POST.get('scheduleId'))
+        schedule = get_object_or_404(ScheduleTour, id = schedule_id)
+        message = request.POST.get('message')
+        if message == 'accept':
+            email_message = "Your requesr has been accepted"
+            schedule.accepted = True
+            schedule.save()
+        elif message == 'reject':
+            email_message = "Your requesr has been rejected"
+            schedule.delete()
+
+        send_mail(
+            "Request to Schedule Tour",
+            email_message,
+            from_email = "Agyapong Properties",
+            recipient_list = ['ebenezeroffei@outlook.com']
+        )
+
+        return JsonResponse({'count':ScheduleTour.objects.count()})
