@@ -3,8 +3,9 @@ import pytz
 from django.shortcuts import render,get_object_or_404
 from django.views import generic
 from django.utils.decorators import method_decorator
-from django.http import JsonResponse
+from django.http import JsonResponse,HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import user_passes_test,login_required
+from django.urls import reverse
 from .models import Property,ScheduleTour
 from .forms import PropertyForm,InteriorFeaturesForm,ExteriorFeaturesForm
 
@@ -24,6 +25,12 @@ class AdminIndexView(generic.View):
     def dispatch(self,request,*args,**kwargs):
         return render(request,self.template_name)
     
+# Dont forget to add some mixins
+class AdminPropertiesView(generic.ListView):
+    model = Property
+    template_name = 'app/admin_properties.html'
+    context_object_name = 'properties'
+
 class PropertiesView(generic.ListView):
     model = Property
     template_name = 'app/properties.html'
@@ -48,6 +55,88 @@ class PropertiesCreateView(generic.View):
         }
         return render(request,self.template_name,context)
 
+    def post(self,request,*args,**kwargs):
+        form1 = self.form_class1(request.POST,request.FILES)
+        form2 = self.form_class2(request.POST)
+        form3 = self.form_class3(request.POST)
+        if form1.is_valid() and form2.is_valid() and form3.is_valid():
+            property_details = form1.cleaned_data
+            # Create and save the property
+            prop = Property(**property_details)
+            prop.save()
+            # Modify the property exterior and interior features before saving
+            form2.instance.bedroom = form1.cleaned_data.get('bedroom')
+            form2.instance.bathroom = form1.cleaned_data.get('bathroom')
+            form2.instance.prop = prop
+            form3.instance.prop = prop
+            form2.save()
+            form3.save()
+            return HttpResponseRedirect(reverse('app:properties_detail',args = (prop.pk,)))
+        else:
+            print("They are not valid")
+        context = {
+            'form1': form1,
+            'form2': form2,
+            'form3': form3
+        }
+        return render(request,self.template_name,context)
+
+# Don't forget to add mixins
+class PropertyEditView(generic.View):
+    form_class1 = PropertyForm
+    form_class2 = InteriorFeaturesForm
+    form_class3 = ExteriorFeaturesForm
+    template_name = 'app/property_form.html'
+
+    def get(self,request,*args,**kwargs):
+        property_id = self.kwargs.get('pk')
+        prop = get_object_or_404(Property,id = property_id)
+        form1 = self.form_class1(instance = prop)
+        form2 = self.form_class2(instance = prop.interiorfeatures)
+        form3 = self.form_class3(instance = prop.exteriorfeatures)
+        context = {
+            'form1': form1,
+            'form2': form2,
+            'form3': form3,
+            'update': True,
+            'image1': prop.image1.url,
+            'image2': prop.image2.url,
+            'image3': prop.image3.url,
+            'image4': prop.image4.url,
+            'image5': prop.image5.url
+        }
+        return render(request,self.template_name,context)
+
+    def post(self,request,*args,**kwargs):
+        property_id = self.kwargs.get('pk')
+        prop = get_object_or_404(Property,id = property_id)
+        form1 = self.form_class1(request.POST,request.FILES,instance = prop)
+        form2 = self.form_class2(request.POST,instance = prop.interiorfeatures)
+        form3 = self.form_class3(request.POST,instance = prop.exteriorfeatures)
+        if form1.is_valid() and form2.is_valid() and form3.is_valid():
+            property_details = form1.cleaned_data
+            # Create and save the property
+            # Modify the property exterior and interior features before saving
+            form2.instance.bedroom = form1.cleaned_data.get('bedroom')
+            form2.instance.bathroom = form1.cleaned_data.get('bathroom')
+            form1.save()
+            form2.save()
+            form3.save()
+            return HttpResponseRedirect(reverse('app:properties_detail',args = (prop.pk,)))
+        else:
+            print("They are not valid")
+        context = {
+            'form1': form1,
+            'form2': form2,
+            'form3': form3,
+            'update': True,
+            'image1': prop.image1.url,
+            'image2': prop.image2.url,
+            'image3': prop.image3.url,
+            'image4': prop.image4.url,
+            'image5': prop.image5.url
+        }
+        return render(request,self.template_name,context)
 
 class PropertiesDetailView(generic.DetailView):
     """ This class displays the details of the property """
@@ -130,3 +219,16 @@ class CreateSheduleView(generic.View):
                 )
                 schedule_tour.save()
             return JsonResponse({})
+
+
+class DeletePropertyView(generic.View):
+    """ This class is responsible for deleting a blog """
+
+    def post(self,request,*args,**kwargs):
+        property_id = int(request.POST.get('propertyId'))
+        property = get_object_or_404(Property,id = property_id)
+        # Delete Blog
+        property.delete()
+        # Delete Image from the disk
+        data = {'count': Property.objects.count()}
+        return JsonResponse(data)

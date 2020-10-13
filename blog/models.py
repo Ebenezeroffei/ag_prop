@@ -1,3 +1,4 @@
+import os
 from django.db import models
 from django.utils import timezone
 from django.urls import reverse
@@ -17,6 +18,11 @@ class Blog(models.Model):
         if img.width > 1200 and img.height > 370:
             img.resize((1200,370))
             img.save(self.image.path)
+
+    def delete(self):
+        blog_img = self.image.path
+        super().delete()
+        os.remove(blog_img)
         
     
     def __str__(self):

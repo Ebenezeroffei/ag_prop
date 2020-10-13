@@ -1,5 +1,8 @@
+import os
 from django.db import models
 from django.contrib.auth.models import User
+from PIL import Image
+
 
 # Create your models here.
 class Property(models.Model):
@@ -23,6 +26,28 @@ class Property(models.Model):
     image4 = models.ImageField(default = 'property_default.png',upload_to = 'properties_pics')
     image5 = models.ImageField(default = 'property_default.png',upload_to = 'properties_pics')
     
+    def save(self):
+        """ This function will modify the size of the images before saving them """
+        super().save()
+        images = [self.image1,self.image2,self.image3,self.image4,self.image5]
+        for image in images:
+            img = Image.open(image.path)
+            img = img.resize((500,500))
+            img.save(image.path)
+
+    def delete(self):
+        """ This function will delete all images relating to a propertry """
+        images = [self.image1,self.image2,self.image3,self.image4,self.image5]
+        super().delete()
+        for image in images:
+            if  image.url != "/media/property_default.png":
+                os.remove(image.path)
+
+
+    def get_absolute_url(self):
+        return reverse('app:properties_detail',args = (self.pk,) )
+
+
     def active_images(self):
         from os import path
         return [img for img in [self.image1,self.image2,self.image3,self.image4,self.image5] if path.exists(img.path) ]

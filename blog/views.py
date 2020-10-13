@@ -45,12 +45,8 @@ class DeleteBlogView(generic.View):
     def get(self,request,*args,**kwargs):
         blog_id = int(request.GET.get('blogId'))
         blog = get_object_or_404(Blog,id = blog_id)
-        img_path = blog.image.path
         # Delete Blog
         blog.delete()
-        # Delete Image from the disk
-        import os
-        os.remove(img_path)
         data = {'count': Blog.objects.count()}
         return JsonResponse(data)
     
